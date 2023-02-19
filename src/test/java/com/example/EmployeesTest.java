@@ -22,7 +22,7 @@ class EmployeesTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    //Tests with own parameters
+    //Tests without Mockito
     @Test
     void testIfEmployeeIsPaidByCreatingAnEmployee () {
         //Here an employee is created to test if you can pay them.
@@ -31,7 +31,7 @@ class EmployeesTest {
         assertTrue(employee.isPaid());
     }
 
-    //Tests using Mockito
+    //Tests with Mockito
     @Test
     void testEmployeeId () {
         //Here you do not need to create an employee because you use mock.
@@ -53,11 +53,18 @@ class EmployeesTest {
     }
 
     @Test
-    public void spyOnEmployeeRepository() { //Testklass med Mockito
+    public void testEmployeeRepositorySpyOnListFindAll() { //Testklass med Mockito
        //Spy is used to spy on the list in employeeRepository
         List<Employee> spyList = spy(employeeRepository.findAll());
         when(spyList.size()).thenReturn(3);
         assertEquals(3, spyList.size());
+    }
+
+    @Test
+    public void testEmployeeRepositorySave () {
+        //When you use save in employeeRepository with employee, return employee
+        when(employeeRepository.save(employee)).thenReturn(employee);
+        assertEquals(employee, employeeRepository.save(employee));
     }
 
     void testDoubleEmployeeRepository() { //Skapa egna inputs att testa med
