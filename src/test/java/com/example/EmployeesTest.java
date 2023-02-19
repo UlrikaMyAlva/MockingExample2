@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,6 +17,8 @@ class EmployeesTest {
     @Mock
     Employee employee = mock(Employee.class);
     EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
+    BankService bankService = mock(BankService.class);
+    Employees employees = mock(Employees.class);
 
     @BeforeEach
     void Init() {
@@ -67,7 +70,32 @@ class EmployeesTest {
         assertEquals(employee, employeeRepository.save(employee));
     }
 
-    void testDoubleEmployeeRepository() { //Skapa egna inputs att testa med
+    @Test
+    public void testPayEmployeesEmployeeRepository () {
+
+        List<Employee> fakeList = new ArrayList<>();
+        fakeList.add(employee);
+        fakeList.add(employee);
+        fakeList.add(employee);
+
+        EmployeeRepository forTest = new EmployeeRepository() {
+            @Override
+            public List<Employee> findAll() {
+                return fakeList;
+            }
+
+            @Override
+            public Employee save(Employee e) {
+                return null;
+            }
+        };
+
+        Employees testWithFakeList = new Employees(forTest, bankService);
+
+        assertEquals(3, testWithFakeList.payEmployees());
 
     }
+
+    @Test
+    public vo
 }
