@@ -3,6 +3,7 @@ package com.example;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -10,6 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class EmployeesTest {
+
+
+    @Mock
+    Employee employee = mock(Employee.class);
 
     @BeforeEach
     void Init() {
@@ -27,7 +32,7 @@ class EmployeesTest {
     //Tests using Mockito
     @Test
     void testIdWithMock () {
-        Employee employee = mock(Employee.class);
+        //Employee employee = mock(Employee.class);
         when(employee.isPaid()).thenReturn(true);
         assertTrue(employee.isPaid());
     }
