@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,10 +21,6 @@ class EmployeesTest {
     BankService bankService = mock(BankService.class);
     Employees employees = mock(Employees.class);
 
-    @BeforeEach
-    void Init() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     //Tests without Mockito
     @Test
@@ -71,7 +68,15 @@ class EmployeesTest {
     }
 
     @Test
-    public void testPayEmployeesEmployeeRepository () {
+    public void testPayEmployeesFakeListAndBankService () {
+
+        /*
+
+        Test that verifies that if a list of three employees are added,
+        the method PayEmployees will return int 3
+        and bankservice is called three times during that process
+
+         */
 
         List<Employee> fakeList = new ArrayList<>();
         fakeList.add(employee);
@@ -93,9 +98,25 @@ class EmployeesTest {
         Employees testWithFakeList = new Employees(forTest, bankService);
 
         assertEquals(3, testWithFakeList.payEmployees());
+        verify(bankService, times(3)).pay(null, 0.0d);
 
     }
 
     @Test
-    public vo
+    public void testPayEmployeesEmployeeRepositoryCalled() {
+
+        /*
+
+        Tests that employeeRepository is called.
+
+         */
+
+        Employees employees1 = new Employees(employeeRepository, bankService);
+        employees1.payEmployees();
+
+        verify(employeeRepository).findAll();
+
+    }
+    
+
 }
