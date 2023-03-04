@@ -1,12 +1,9 @@
 package com.example;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,82 +29,26 @@ class EmployeesTest {
     }
 
     //Tests with Mockito
-    @Test
-    void testEmployeeId () {
-        //Here you do not need to create an employee because you use mock.
-        //The employee is already created under the annotation @mock
-        when(employee.getId()).thenReturn("1212");
-        assertEquals("1212",employee.getId());
-    }
 
-    @Test
-    void testEmployeeIsPaid () {
-        when(employee.isPaid()).thenReturn(true);
-        assertTrue(employee.isPaid());
-    }
-
-    @Test
-    void testEmployeeGetSalary() {
-        when(employee.getSalary()).thenReturn(30000.00);
-        assertEquals(30000.00, employee.getSalary());
-    }
 
     @Test
     public void testEmployeeRepositorySpyOnListFindAll() { //Testklass med Mockito
+
        //Spy is used to spy on the list in employeeRepository
+
         List<Employee> spyList = spy(employeeRepository.findAll());
         when(spyList.size()).thenReturn(3);
         assertEquals(3, spyList.size());
-    }
-
-    @Test
-    public void testEmployeeRepositorySave () {
-        //When you use save in employeeRepository with employee, return employee
-        when(employeeRepository.save(employee)).thenReturn(employee);
-        assertEquals(employee, employeeRepository.save(employee));
-    }
-
-    @Test
-    public void testPayEmployeesFakeListAndBankService () {
-
-        /*
-
-        Test that verifies that if a list of three employees are added,
-        the method PayEmployees will return int 3
-        and bankservice is called three times during that process
-
-         */
-
-        List<Employee> fakeList = new ArrayList<>();
-        fakeList.add(employee);
-        fakeList.add(employee);
-        fakeList.add(employee);
-
-        EmployeeRepository forTest = new EmployeeRepository() {
-            @Override
-            public List<Employee> findAll() {
-                return fakeList;
-            }
-
-            @Override
-            public Employee save(Employee e) {
-                return null;
-            }
-        };
-
-        Employees testWithFakeList = new Employees(forTest, bankService);
-
-        assertEquals(3, testWithFakeList.payEmployees());
-        verify(bankService, times(3)).pay(null, 0.0d);
 
     }
+
 
     @Test
     public void testPayEmployeesEmployeeRepositoryCalled() {
 
         /*
 
-        Tests that employeeRepository is called.
+        Tests that findall in employeeRepository is called.
 
          */
 
@@ -117,6 +58,51 @@ class EmployeesTest {
         verify(employeeRepository).findAll();
 
     }
-    
+
+
+    @Test
+    public void testReturnedPaymentsAndEmployeeRepository() {
+
+        /*
+        Tests that payEmployees returns right amount of payments.
+
+         */
+
+        List<Employee> test = new ArrayList<>();
+        test.add(employee);
+        test.add(employee);
+        test.add(employee);
+
+        Employees employees1 = new Employees(employeeRepository, bankService);
+
+        when(employeeRepository.findAll()).thenReturn(test);
+        int payments = employees1.payEmployees();
+
+        assertEquals(3, payments);
+
+    }
+
+    @Test
+    public void testBankserviceBeingCalled() {
+
+        /*
+
+        Tests if Bankservice.pay is used.
+
+         */
+
+        List<Employee> test = new ArrayList<>();
+        test.add(employee);
+
+        Employees employees1 = new Employees(employeeRepository, bankService);
+
+        when(employeeRepository.findAll()).thenReturn(test);
+
+        employees1.payEmployees();
+
+        verify(bankService).pay(null, 0.0d);
+
+    }
+
 
 }

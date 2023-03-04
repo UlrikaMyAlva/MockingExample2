@@ -25,5 +25,9 @@ public class Employees {
 			}
 		}
 		return payments;
+
+	}	public int payEmployees2() {
+		int payments = 0;
+		return payments;
 	}
 }
